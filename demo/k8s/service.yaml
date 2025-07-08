@@ -13,5 +13,5 @@ spec:
     - protocol: TCP
       port: 80  # internal port for this service
       targetPort: 8080  # listening port for the container
-      NodePort: 30080    # exposed port to access
+      nodePort: 30080    # exposed port to access
   type: NodePort
