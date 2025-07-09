@@ -1,0 +1,31 @@
+# This file will create Deployment, it will grant that our app will run in a image and will always have at least one copy running
+apiVersion: apps/v1
+kind: Deployment
+# Give the object a name
+metadata:
+  name: demo-app
+  labels:
+    app: demo-app
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: /actuator/prometheus
+    prometheus.io/port: "8080"
+spec:
+  # Only need 1 instance, we can change it to scalate
+  replicas: 1
+  # Which pods need to be part of the Deployment
+  selector:
+    matchLabels:
+      app: demo-app
+  # Template of every copy or pod running
+  template:
+    metadata:
+      labels:
+        app: demo-app
+    # Defines main container
+    spec:
+      containers:
+        - name: demo-app
+          image: asterixdecortes/challenge_image
+          ports:
+            - containerPort: 8080
