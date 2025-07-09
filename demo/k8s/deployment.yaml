@@ -6,6 +6,10 @@ metadata:
   name: demo-app
   labels:
     app: demo-app
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: /actuator/prometheus
+    prometheus.io/port: "8080"
 spec:
   # Only need 1 instance, we can change it to scalate
   replicas: 1
