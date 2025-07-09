@@ -1,0 +1,49 @@
+name: Build and Push Docker Image
+
+# This will activate only when push on main branch
+on:
+  push:
+    branches:
+      - main
+
+# Create a job called build-and-push that will run on the latest ubuntu version
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # This first step will download the source code from the repo
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      # Second step that will install java
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # This will store all Maven dependencies
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-m2
+
+      # Next step where it will compile the project
+      - name: Build with Maven
+        run: ./mvnw clean package -DskipTests
+
+      # Login on Github Container Registry using github secrets
+      - name: Log in to Github Container Registry
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      # Create image using Dockerfile with the name challenge_image
+      - name: Build and tag Docker image
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/challenge_image:latest .
+
+      # Upload the Docker image
+      - name: Push Docker image
+        run: docker push ghcr.io/${{ github.repository_owner }}/challenge_image:latest
