@@ -1,10 +1,10 @@
 name: Build and Push Docker Image
 
-# This will activate only when push on main branch
+# This will activate only when push on master branch
 on:
   push:
     branches:
-      - main
+      - master
 
 # Create a job called build-and-push that will run on the latest ubuntu version
 jobs:
