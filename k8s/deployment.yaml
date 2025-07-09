@@ -26,6 +26,6 @@ spec:
     spec:
       containers:
         - name: demo-app
-          image: asterixdecortes/challenge_image
+          image: ghcr.io/asterixdecortes/challenge_image:latest
           ports:
             - containerPort: 8080
